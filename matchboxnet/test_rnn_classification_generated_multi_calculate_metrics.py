@@ -179,13 +179,13 @@ def main():
 
         if args.optim == "adam":
             model['opt_classifier'] = torch.optim.Adam(
-                total_params, lr=config.lr)
+                model['classifier'].parameters(), lr=config.lr)
             model['lr_scheduler'] = torch.optim.lr_scheduler.CosineAnnealingLR(
                 model['opt_classifier'], T_max=args.train_epochs, eta_min=10e-6)
         #Adding support for SGD optimizer with LR scheduler as Cosine
         if args.optim == "sgd":
             model['opt_classifier'] = torch.optim.SGD(
-                total_params, lr=config.lr)
+                model['classifier'].parameters(), lr=config.lr)
             model['lr_scheduler'] = torch.optim.lr_scheduler.CosineAnnealingLR(
                 model['opt_classifier'], T_max=args.train_epochs, eta_min=10e-6)
 
