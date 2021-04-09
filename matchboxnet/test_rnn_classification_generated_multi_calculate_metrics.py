@@ -13,7 +13,7 @@ import threading
 import soundfile as sf
 # Aux scripts
 import kwspipe
-import kwscnn
+import matchboxnet
 import pdb
 import modelconfig
 
