@@ -161,85 +161,37 @@ def main():
         LOG.info(args)
         LOG.info(config)
 
-        model = kwscnn.DSCNN_RNN_Block(config.cnn_channels,
-                        config.rnn_hidden_size,
-                        1,
-                        device,
-                        rank=config.rank, fwd_context=15)
+        classifier = matchboxnet.MatchBoxNet(80, num_labels=len(args.words))
 
-        classifier = kwscnn.Binary_Classification_Block(41,
-                                                        100,
-                                                        1,
-                                                        device,
-                                                        islstm=config.islstm,
-                                                        isBi=config.isBi,
-                                                        dropout=args.dropout,
-                                                        num_labels=len(args.words) )
 
-        if args.fine_tune:
-            print('***************************')
-            print('Phoneme Model : Fine-tuned')
-            print('***************************')
-        else:
-            print('************************')
-            print('Phoneme Model : Frozen')
-            print('************************')
         print('************************')
         print(f'Version {args.version}')
         print('************************')
-        print('*******************************************')
-        print(f'Classifier and Pipeline Train Flag: {args.is_training}')
-        print('*******************************************')
 
         model = {
-            'name': model.__name__,
             'name_classifier': classifier.__name__,
-            'data': model.train(False),
             'classifier': classifier
         }
-
-        model['data'] = model['data'].to(device)
-        model['data'] = torch.nn.DataParallel(model['data'])
 
         model['classifier'] = model['classifier'].to(device)
         model['classifier'] = torch.nn.DataParallel(model['classifier'])
 
 
-        if args.fine_tune:
-            print('*****************')
-            print('All Parameters')
-            print('*****************')
-            total_params = list(model['data'].parameters()) + list(model['classifier'].parameters())
-        else:
-            print('************************')
-            print('Classifier Parameters')
-            print('************************')
-            total_params = model['classifier'].parameters()
-
         if args.optim == "adam":
-            model['opt'] = torch.optim.Adam(model['data'].parameters(),
-                                            lr=config.lr)
             model['opt_classifier'] = torch.optim.Adam(
                 total_params, lr=config.lr)
             model['lr_scheduler'] = torch.optim.lr_scheduler.CosineAnnealingLR(
-                model['opt'], T_max=args.train_epochs, eta_min=10e-6)
+                model['opt_classifier'], T_max=args.train_epochs, eta_min=10e-6)
         #Adding support for SGD optimizer with LR scheduler as Cosine
         if args.optim == "sgd":
-            model['opt'] = torch.optim.SGD(model['data'].parameters(),
-                                           lr=config.lr)
             model['opt_classifier'] = torch.optim.SGD(
                 total_params, lr=config.lr)
             model['lr_scheduler'] = torch.optim.lr_scheduler.CosineAnnealingLR(
-                model['opt'], T_max=args.train_epochs, eta_min=10e-6)
+                model['opt_classifier'], T_max=args.train_epochs, eta_min=10e-6)
 
         model['stats'] = None
         model['frame_rate'] = 3  # default frame rate is 3x (30ms)
 
-        model['checkpoint'] = ModelCheckPoint(model['name'],
-                                              model_path,
-                                              model['data'],
-                                              model['opt'],
-                                              LOG=LOG)
         model['checkpoint_classifier'] = ModelCheckPoint(
             model['name_classifier'],
             model_path,
@@ -254,10 +206,9 @@ def main():
         os.makedirs(model_path, exist_ok=True)
 
         i16_size = (
-            sum([param.numel() for param in model['data'].parameters()]) +
             sum([param.numel() for param in model['classifier'].parameters()
                  ])) / 1024.0 / 1024.0
-        LOG.info('Model %s:  I8 size = %f', model['name'], i16_size)
+        LOG.info('Model %s:  I8 size = %f', model['name_classifier'], i16_size)
 
         tensorboards.append(tensorboard)
         LOGS.append(LOG)
@@ -295,7 +246,7 @@ def main():
         dataset = 'dataset_5/test'
     for k in args.words:
         total_number_of_labels += len(os.listdir(
-            f'/mnt/kws_data/mozilla_data/kws_clips_montrealformat/{dataset}/{k}/'))
+            f'/mnt/output/kws_data/mozilla_data/kws_clips_montrealformat/{dataset}/{k}/'))
         # {}/mozilla_data/kws_clips_montrealformat/{}/chunk_data/{}
     print("----------------------------------------------")
     print(args.words)
@@ -378,12 +329,9 @@ def _process_phoneme_model(model, feature, label, seqlen, count, args,
     # import pdb;pdb.set_trace()
     # print("running")
     seqlen_classifier = seqlen.clone() / 3
-    model_data = model['data']
-    model_data.eval()
     classfier = model['classifier']
     classfier.eval()
     opt = model['opt_classifier']
-    checkpoint = model['checkpoint']
     checkpoint_classifier = model['checkpoint_classifier']
     frame_rate = model['frame_rate']
     pad = 5  # ENSURE +VE
@@ -402,9 +350,8 @@ def _process_phoneme_model(model, feature, label, seqlen, count, args,
 
     step = checkpoint_classifier.global_step()
     feature = feature.permute((0, 2, 1))  # NLC to NCL
-    posteriors = model_data(feature)
-    posteriors = classfier(posteriors, seqlen_classifier)
-    N, L, C = posteriors.shape
+    posteriors = classfier(feature, seqlen)
+    N, C, L = posteriors.shape
 
     flat_posteriors = posteriors.reshape((-1, C))  # to [NL] x C
 
