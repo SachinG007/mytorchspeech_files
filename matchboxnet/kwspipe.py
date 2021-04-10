@@ -872,9 +872,15 @@ def make_phoneme_google_generated_noise_rir_classification_pipe(local, args):
         if args.version == 1:
             data_folder_list = ['dataset_1_azure_tts', 'dataset_1_google_tts']
         elif args.version == 2:
+<<<<<<< HEAD
+            data_folder_list = ['dataset_2_azure_tts', 'dataset_2_google_tts']
+        elif args.version == 3:
+            data_folder_list = ['dataset_3_azure_tts', 'dataset_3_google_tts']
+=======
             data_folder_list = ['dataset_2_azure_tts']
         elif args.version == 3:
             data_folder_list = ['dataset_3_azure_tts']
+>>>>>>> 58ff4464ca6665f303f565be9335698f628f76bc
         elif args.version == 4:
             data_folder_list = ['dataset_4_azure_tts']
         else:
@@ -935,8 +941,11 @@ def make_phoneme_google_generated_noise_rir_classification_pipe(local, args):
     #                 args.datablob, args.file_set),
     #             '{}/data/MSRI/PRJ/chunk_data/SGY_rec5_detect'.format(args.datablob)))
 
+<<<<<<< HEAD
+=======
         # chunk_metas.append(hey_chunk_meta)
 
+>>>>>>> 58ff4464ca6665f303f565be9335698f628f76bc
     # print("Total Different Words : ", len(chunk_metas))
     data_pipes = [
         td.DataPipe(
