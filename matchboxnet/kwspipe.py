@@ -863,45 +863,61 @@ def make_phoneme_google_generated_noise_rir_classification_pipe(local, args):
         print('**********')
         print('TTS Data')
         print('**********')
-
         words = args.words
-        for word in words:
-            word = word.upper()
-            generated_positive_chunk_meta = list(
-                td.BinaryChunkLister(
-                    '{}/mozilla_data/kws_clips_montrealformat/dataset_1_azure_tts/chunk_data/{}/{}'
-                    .format(args.datablob, word, args.file_set),
-                    '{}/mozilla_data/kws_clips_montrealformat/dataset_1_azure_tts/chunk_data/{}'
-                    .format(args.datablob, word)))
-            chunk_metas.append(generated_positive_chunk_meta)
-
-        for word in words:
-            word = word.upper()
-            generated_positive_chunk_meta = list(
-                td.BinaryChunkLister(
-                    '{}/mozilla_data/kws_clips_montrealformat/dataset_1_google_tts/chunk_data/{}/{}'
-                    .format(args.datablob, word, args.file_set),
-                    '{}/mozilla_data/kws_clips_montrealformat/dataset_1_google_tts/chunk_data/{}'
-                    .format(args.datablob, word)))
-            chunk_metas.append(generated_positive_chunk_meta)
-    
+        # if len(args.words)==12:
+        #     data_folder_list = ['google10_tts_data', 'google10_google_tts']
+        # else:
+        #     data_folder_list = ['google30_tts_data', 'google30_google_tts', 'google30_aws_tts_wav']
+        # 'google30_tts_data', 'google30_google_tts', 'google30_aws_tts_wav'
+        if args.version == 1:
+            data_folder_list = ['dataset_1_azure_tts', 'dataset_1_google_tts']
+        elif args.version == 2:
+            data_folder_list = ['dataset_2_azure_tts', 'dataset_2_google_tts']
+        elif args.version == 3:
+            data_folder_list = ['dataset_3_azure_tts', 'dataset_3_google_tts']
+        elif args.version == 4:
+            data_folder_list = ['dataset_4_azure_tts']
+        else:
+            data_folder_list = ['dataset_5_azure_tts']
+        for data_folder in data_folder_list:
+            print(data_folder)
+            for word in words:
+                generated_positive_chunk_meta = list(
+                    td.BinaryChunkLister(
+                        '{}/mozilla_data/kws_clips_montrealformat/{}/chunk_data/{}/{}'
+                        .format(args.datablob, data_folder, word, args.file_set),
+                        '{}/mozilla_data/kws_clips_montrealformat/{}/chunk_data/{}'
+                        .format(args.datablob, data_folder, word)))
+                chunk_metas.append(generated_positive_chunk_meta)
     else:
+        # data_folder = 'google10_train' if len(args.words)==12 else 'google30_train'
+        if args.version == 1:
+            data_folder = 'dataset_1/train'
+        elif args.version == 2:
+            data_folder = 'dataset_2/train'
+        elif args.version == 3:
+            data_folder = 'dataset_3/train'
+        elif args.version == 4:
+            data_folder = 'dataset_4/train'
+        else:
+            data_folder = 'dataset_5/train'
         print('************')
         print('Normal Data')
         print('************')
-        
+        print(data_folder)
         words = args.words
         for word in words:
             generated_positive_chunk_meta = list(
                 td.BinaryChunkLister(
-                    '{}/mozilla_data/kws_clips_montrealformat/dataset_1/train/chunk_data/{}/{}'
-                    .format(args.datablob, word, args.file_set),
-                    '{}/mozilla_data/kws_clips_montrealformat/dataset_1/train/chunk_data/{}'
-                    .format(args.datablob, word)))
+                    '{}/mozilla_data/kws_clips_montrealformat/{}/chunk_data/{}/{}'
+                    .format(args.datablob, data_folder, word, args.file_set),
+                    '{}/mozilla_data/kws_clips_montrealformat/{}/chunk_data/{}'
+                    .format(args.datablob, data_folder, word)))
             chunk_metas.append(generated_positive_chunk_meta)
     
     print("Total Number of Word chunk folders : ", len(chunk_metas))
 
+    # print("Total Different Words : ", len(chunk_metas))
     data_pipes = [
         td.DataPipe(
             td.IIDListSampler(kkk,
@@ -965,18 +981,26 @@ def make_phoneme_google_generated_noise_rir_classification_pipe_test(local, args
 
     chunk_metas = []
 
-    dataset = 'google10_test' if len(args.words)==12 else 'google30_test'
-    if args.version == '2' or args.version == 'v2':
-        dataset += '_v2'
+    # dataset = 'google10_test' if len(args.words)==12 else 'google30_test'
+    if args.version == 1:
+        dataset = 'dataset_1/test'
+    elif args.version == 2:
+        dataset = 'dataset_2/test'
+    elif args.version == 3:
+        dataset = 'dataset_3/test'
+    elif args.version == 4:
+        dataset = 'dataset_4/test'
+    else:
+        dataset = 'dataset_5/test'
     print(dataset)
     words = args.words
     for word in words:
         word = word.lower()
         generated_positive_chunk_meta = list(
             td.BinaryChunkLister(
-                '{}/data/{}/chunk_data/{}/{}'
+                '{}/mozilla_data/kws_clips_montrealformat/{}/chunk_data/{}/{}'
                 .format(args.datablob, dataset, word, args.file_set),
-                '{}/data/{}/chunk_data/{}'
+                '{}/mozilla_data/kws_clips_montrealformat/{}/chunk_data/{}'
                 .format(args.datablob, dataset, word)))
         chunk_metas.append(generated_positive_chunk_meta)
 
