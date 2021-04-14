@@ -935,11 +935,6 @@ def make_phoneme_google_generated_noise_rir_classification_pipe(local, args):
     #                 args.datablob, args.file_set),
     #             '{}/data/MSRI/PRJ/chunk_data/SGY_rec5_detect'.format(args.datablob)))
 
-<<<<<<< HEAD
-=======
-        # chunk_metas.append(hey_chunk_meta)
-
->>>>>>> 58ff4464ca6665f303f565be9335698f628f76bc
     # print("Total Different Words : ", len(chunk_metas))
     data_pipes = [
         td.DataPipe(

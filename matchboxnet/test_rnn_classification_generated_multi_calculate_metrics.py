@@ -71,7 +71,7 @@ def main():
             ]
         elif args.version == 3:
             args.words = ['days', 'early', 'common', 'william', 'blue', 'success', 'owned', 'modern', 'house', 'king',
-            'levels', 'prior', 'give', 'oil', 'economy', 'cannot', 'parents', 'inside', 'reason', 'houses',
+            'levels', 'prior', 'give', 'oil', 'economy', 'cannot', 'parents', 'inside', 'reason', 'mixed',
             'grace', 'battles', 'iron', 'rises', 'durham', 'loss', 'eddie', 'georgia', 'varied', 'charity'
             ]
         elif args.version == 4:
