@@ -869,16 +869,7 @@ def make_phoneme_google_generated_noise_rir_classification_pipe(local, args):
         # else:
         #     data_folder_list = ['google30_tts_data', 'google30_google_tts', 'google30_aws_tts_wav']
         # 'google30_tts_data', 'google30_google_tts', 'google30_aws_tts_wav'
-        if args.version == 1:
-            data_folder_list = ['dataset_1_azure_tts', 'dataset_1_google_tts']
-        elif args.version == 2:
-            data_folder_list = ['dataset_2_azure_tts', 'dataset_2_google_tts']
-        elif args.version == 3:
-            data_folder_list = ['dataset_3_azure_tts', 'dataset_3_google_tts']
-        elif args.version == 4:
-            data_folder_list = ['dataset_4_azure_tts']
-        else:
-            data_folder_list = ['dataset_5_azure_tts']
+        data_folder_list = [f'dataset_{args.version}_azure_tts', f'dataset_{args.version}_google_tts']
         for data_folder in data_folder_list:
             print(data_folder)
             for word in words:
@@ -891,16 +882,7 @@ def make_phoneme_google_generated_noise_rir_classification_pipe(local, args):
                 chunk_metas.append(generated_positive_chunk_meta)
     else:
         # data_folder = 'google10_train' if len(args.words)==12 else 'google30_train'
-        if args.version == 1:
-            data_folder = 'dataset_1/train'
-        elif args.version == 2:
-            data_folder = 'dataset_2/train'
-        elif args.version == 3:
-            data_folder = 'dataset_3/train'
-        elif args.version == 4:
-            data_folder = 'dataset_4/train'
-        else:
-            data_folder = 'dataset_5/train'
+        data_folder = f'dataset_{args.version}/train'
         print('************')
         print('Normal Data')
         print('************')
@@ -935,11 +917,8 @@ def make_phoneme_google_generated_noise_rir_classification_pipe(local, args):
     #                 args.datablob, args.file_set),
     #             '{}/data/MSRI/PRJ/chunk_data/SGY_rec5_detect'.format(args.datablob)))
 
-<<<<<<< HEAD
-=======
         # chunk_metas.append(hey_chunk_meta)
 
->>>>>>> 58ff4464ca6665f303f565be9335698f628f76bc
     # print("Total Different Words : ", len(chunk_metas))
     data_pipes = [
         td.DataPipe(
@@ -1005,16 +984,7 @@ def make_phoneme_google_generated_noise_rir_classification_pipe_test(local, args
     chunk_metas = []
 
     # dataset = 'google10_test' if len(args.words)==12 else 'google30_test'
-    if args.version == 1:
-        dataset = 'dataset_1/test'
-    elif args.version == 2:
-        dataset = 'dataset_2/test'
-    elif args.version == 3:
-        dataset = 'dataset_3/test'
-    elif args.version == 4:
-        dataset = 'dataset_4/test'
-    else:
-        dataset = 'dataset_5/test'
+    dataset = f'dataset_{args.version}/test'
     print(dataset)
     words = args.words
     for word in words:
