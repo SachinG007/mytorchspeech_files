@@ -246,24 +246,14 @@ def main():
     threads = []
     labels_done = []
     total_number_of_labels = 0
-    # dataset = 'google10_test' if len(args.words)==12 else 'google30_test'
-    if args.version == 1:
-        dataset = 'dataset_1/test'
-    elif args.version == 2:
-        dataset = 'dataset_2/test'
-    elif args.version == 3:
-        dataset = 'dataset_3/test'
-    elif args.version == 4:
-        dataset = 'dataset_4/test'
-    elif args.version == 5:
-        dataset = 'dataset_5/test'
-    else:
-        dataset = 'dataset_6/test'
+    # dataset = 'google10_train' if len(args.words)==12 else 'google30_train'
+    dataset = 'google10_test' if len(args.words)==12 else 'google30_test'
+    if args.version == '2' or args.version == 'v2':
+        dataset += '_v2'
     for k in args.words:
-        total_number_of_labels += len(os.listdir(
-            f'/mnt/kws_data/mozilla_data/kws_clips_montrealformat/{dataset}/{k}/'))
-        # {}/mozilla_data/kws_clips_montrealformat/{}/chunk_data/{}
+        total_number_of_labels += len(os.listdir(f'/mnt/output/kws_data/data/{dataset}/{k}/'))
     print("----------------------------------------------")
+    
     print(args.words)
     print(f"Number of files in this iteration is {total_number_of_labels}")
     print("----------------------------------------------")
