@@ -14,6 +14,7 @@ import soundfile as sf
 # Aux scripts
 import kwspipe
 import kwscnn
+import matchboxnet
 import pdb
 import modelconfig
 
@@ -166,14 +167,7 @@ def main():
                         device,
                         rank=config.rank, fwd_context=15)
 
-        classifier = kwscnn.Binary_Classification_Block(41,
-                                                        100,
-                                                        1,
-                                                        device,
-                                                        islstm=config.islstm,
-                                                        isBi=config.isBi,
-                                                        dropout=args.dropout,
-                                                        num_labels=len(args.words) )
+        classifier = matchboxnet.MatchBoxNet(41, num_labels=len(args.words))
 
         if args.fine_tune:
             print('***************************')
@@ -405,7 +399,7 @@ def _process_phoneme_model(model, feature, label, seqlen, count, args,
     feature = feature.permute((0, 2, 1))  # NLC to NCL
     posteriors = model_data(feature)
     posteriors = classfier(posteriors, seqlen_classifier)
-    N, L, C = posteriors.shape
+    N, C, L = posteriors.shape
 
     flat_posteriors = posteriors.reshape((-1, C))  # to [NL] x C
 
