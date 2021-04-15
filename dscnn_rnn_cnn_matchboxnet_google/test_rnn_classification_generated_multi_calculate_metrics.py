@@ -59,38 +59,9 @@ def main():
 
     if args.words == 'all':
         word_model_name = 'google30'
-        if args.version == 1:
-            args.words = ['case', 'light', 'songs', 'killed', 'present', 'side', 'word', 'ten', 'buried', 'canada',
-          'bank', 'latter', 'floor', 'ships', 'shirt', 'theatre', 'sources', 'mixed', 'simply', 'change',
-          'bonds', 'enjoys', 'tail', 'seem', 'compact', 'deaths', 'domain', 'scheme', 'hundred', 'bigger'
-            ]
-        elif args.version == 2:
-            args.words = ['board', 'law', 'states', 'middle', 'night', 'thus', 'england', 'john', 'sons', 'field',
-            'cast', 'appear', 'weeks', 'leader', 'dance', 'post', 'engine', 'trains', 'takes', 'making',
-            'homer', 'dairy', 'ballet', 'harris', 'parks', 'wild', 'require', 'roberts', 'filming', 'strip'
-            ]
-        elif args.version == 3:
-            args.words = ['days', 'early', 'common', 'william', 'blue', 'success', 'owned', 'modern', 'house', 'king',
-            'levels', 'prior', 'give', 'oil', 'economy', 'cannot', 'parents', 'inside', 'reason', 'houses',
-            'grace', 'battles', 'iron', 'rises', 'durham', 'loss', 'eddie', 'georgia', 'varied', 'charity'
-            ]
-        elif args.version == 4:
-            args.words = ['power', 'body', 'parish', 'food', 'popular', 'outside', 'social', 'street', 'little', 'joined',
-            'lines', 'leaves', 'thought', 'writing', 'cause', 'ball', 'border', 'stop', 'fish', 'navy',
-            'vietnam', 'empty', 'tennis', 'cuts', 'vessel', 'windows', 'replied', 'authors', 'repair', 'matrix'
-            ]
-        elif args.version == 5:
-            args.words = ['land', 'process', 'style', 'role', 'live', 'single', 'york', 'valley', 'french', 'always',
-            'table', 'money', 'remain', 'minor', 'albums', 'century', 'academy', 'effects', 'far', 'martin',
-            'swiss', 'toll', 'andy', 'figure', 'longest', 'venture', 'revised', 'dean', 'sight', 'join'
-            ]
-
-        elif args.version == 6:
-            args.words = ['land', 'england','process', 'success', 'little', 'battles', 'economy', 'academy','toll',
-            'ball', 'ballet', 'light', 'night', 'sight', 'money', 'valley', 'charity', 'figure', 'venture',
-            'remain', 'domain', 'empty', 'andy', 'ten', 'tennis', 'inside', 'outside', 'side', 'appear', 'prior']
-        else:
-            raise ValueError('Incorrect wordset')
+        args.words = ["bed", "bird", "cat", "dog", "down", "eight", "five", "four", "go", 
+            "happy", "house", "left", "marvin", "nine", "no", "off", "on", "one", "right", 
+            "seven", "sheila", "six", "stop", "three", "tree", "two", "up", "wow", "yes", "zero"]
     elif args.words == '12class' or args.words == 'sub':
         word_model_name = 'google10'
         args.words = ["yes", "no", "up", "down", "left", "right", "on", "off",
